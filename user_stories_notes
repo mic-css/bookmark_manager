@@ -1,0 +1,33 @@
+Writing User Stories:
+
+As a user,
+So that I can browse available links
+I would like links stored in a list.
+
+As a user,
+So that I can remember find sites I have recently bookmarked,
+I would like to be able see new links to my bookmark manager. (DESCENDING CHRONOLOGICAL)
+
+As a user,
+So that I can remember interesting sites,
+I would like to be able add new links with the site's address and title to my bookmark manager
+
+As a user,
+So that I can categories my links,
+I would like to be able to add tags to bookmarks.
+
+As a user,
+So I can find links I am interested in,
+I would like to be able to filter my links according to their tags.
+
+
+
+
+WHAT IS PERSISTENCE? Persistence is the layer in which you store your data.
+
+What are the four main design approaches regarding data storage?
+
+Pure in-memory, no persistence at all.
+In memory with periodic snapshots (redis)
+disk-based with update in place writes, such as MySQL or MongoDB
+Commit-Log Based (oldschool) SQL Server/Oracle.
