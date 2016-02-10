@@ -2,7 +2,6 @@ feature 'Adding tags' do
   context 'when adding a new link' do
     scenario 'a user can add tags' do
       visit '/'
-      # sign_in
 
       click_link 'Add link'
       fill_in 'title', with: 'Useless Web'
