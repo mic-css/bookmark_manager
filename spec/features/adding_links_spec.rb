@@ -6,7 +6,7 @@ feature 'Adding links' do
     click_link 'Add link'
     fill_in('title', with: 'Useless Web')
     fill_in('url', with: 'http://theuselessweb.com/')
-    click_button 'Submit'
+    click_button 'Add link'
 
     expect(page).to have_content('Useless Web')
   end
