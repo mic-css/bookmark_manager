@@ -10,5 +10,6 @@ def sign_up_new_user
   fill_in 'Username',  with: 'User'
   fill_in 'Email',      with: 'example@nomail.com'
   fill_in 'Password',   with: 'example123'
+  fill_in 'Confirm password', with: 'example123'
   click_button 'Sign up!'
 end

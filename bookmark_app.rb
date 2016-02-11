@@ -23,9 +23,11 @@ class BookmarkApp < Sinatra::Base
   post '/users' do
     @email = params[:email]
     unless User.first(email: @email)
-      user = User.create(username: params[:username],
+      user = User.create(username:     params[:username],
                           email:    @email,
-                          password: params[:password])
+                          password: params[:password],
+                          password_confirmation: params[:password_confirmation])
+      redirect to '/invalid_login' unless user.valid?
       session[:id] = user.id
       redirect to "/links"
     end
@@ -40,7 +42,7 @@ class BookmarkApp < Sinatra::Base
     erb :links
   end
 
-  post '/new_link/:id' do
+  post '/new_link' do
     if params[:URL].include?('http://') || params[:URL].include?('https://')
       @url = params[:URL]
     else

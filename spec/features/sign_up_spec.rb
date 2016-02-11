@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 feature 'Sign up' do
   scenario 'new user signs up from homepage' do
 
@@ -11,9 +13,10 @@ feature 'Sign up' do
   scenario 'user signs up with existing email' do
     User.create(username: 'User',
                 email: 'example@nomail.com',
-                password: 'example123')
+                password: 'example123',
+                password_confirmation: 'example123')
     sign_up_new_user
-    expect(page).to have_content 'Invalid login: this email already exists'
+    expect(page).to have_content 'Invalid login: Oops, something went wrong!'
     expect(page).to have_button 'Back to login page'
   end
 end
