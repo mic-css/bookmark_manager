@@ -7,8 +7,8 @@ require './lib/user'
 require './lib/dm_setup'
 
 class BookmarkApp < Sinatra::Base
-
   enable :sessions
+  set :session_secret, 'super secret'
 
   helpers do
     def current_user
@@ -19,8 +19,6 @@ class BookmarkApp < Sinatra::Base
   get '/' do
     erb :index
   end
-
-
 
   post '/users' do
     @email = params[:email]
@@ -34,27 +32,15 @@ class BookmarkApp < Sinatra::Base
     redirect to '/invalid_login'
   end
 
-
-
   get '/invalid_login' do
     erb :invalid_login
   end
-
-
-
 
   get '/links' do
     erb :links
   end
 
-
-
-
-
   post '/new_link/:id' do
-
-    current_user
-
     if params[:URL].include?('http://') || params[:URL].include?('https://')
       @url = params[:URL]
     else
@@ -87,16 +73,11 @@ class BookmarkApp < Sinatra::Base
     redirect to "/links"
   end
 
-
-
   get '/tags/:name' do
-    current_user
     tag = Tag.first(name: params[:name])
     @links = tag ? tag.links : []
     erb :links
   end
-
-
 
   # start the server if ruby file executed directly
   run! if app_file == $0

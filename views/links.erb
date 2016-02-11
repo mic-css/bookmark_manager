@@ -1,31 +1,18 @@
-<!DOCTYPE html>
-  <head>
-    <title>Welcome to Bookmark Manager</title>
-  </head>
+<form action="/new_link/<%=current_user.id%>" method='post'>
+  <input type='text' name='Title' placeholder="Title" required>
+  <input type='text' name='URL' placeholder="URL" required>
+  <input type='text' name='Tags' placeholder="Tags (optional)">
+  <input type='submit' value='Add new bookmark'>
+</form>
 
-  <body>
-
-    <h3>Welcome, <%=current_user.username %>!</h3>
-
-    <form action="/new_link/<%=current_user.id%>" method='post'>
-      <input type='text' name='Title' placeholder="Title" required>
-      <input type='text' name='URL' placeholder="URL" required>
-      <input type='text' name='Tags' placeholder="Tags (optional)">
-      <input type='submit' value='Add new bookmark'>
-    </form>
-
-    <% unless current_user.links.empty?%>
-      <ul id="links">
-        <% current_user.links.each do |link| %>
-          <li style="padding: 7px 0px; font-family: Arial;">
-            Title: <b><%=link.title%></b><br>
-            URL: <a href="<%="#{link.url}"%>"><%="#{link.url}"%></a><br>
-            Tags: <em><%="#{link.tags.map{|t| t.name}.join(', ')}"%></em>
-          </li>
-        <% end %>
-      </ul>
+<% unless current_user.links.empty?%>
+  <ul id="links">
+    <% current_user.links.each do |link| %>
+      <li style="padding: 7px 0px; font-family: Arial;">
+        Title: <b><%=link.title%></b><br>
+        URL: <a href="<%="#{link.url}"%>"><%="#{link.url}"%></a><br>
+        Tags: <em><%="#{link.tags.map{|t| t.name}.join(', ')}"%></em>
+      </li>
     <% end %>
-
-  </body>
-
-</html>
+  </ul>
+<% end %>
