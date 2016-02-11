@@ -7,33 +7,53 @@ require './lib/user'
 require './lib/dm_setup'
 
 class BookmarkApp < Sinatra::Base
+
+  enable :sessions
+
+  helpers do
+    def current_user
+      @current_user ||= User.get(session[:id])
+    end
+  end
+
   get '/' do
     erb :index
   end
 
+
+
   post '/users' do
-    # set user information here
     @email = params[:email]
     unless User.first(email: @email)
       user = User.create(username: params[:username],
                           email:    @email,
                           password: params[:password])
-      redirect to "/#{user.id}/links"
+      session[:id] = user.id
+      redirect to "/links"
     end
     redirect to '/invalid_login'
   end
+
+
 
   get '/invalid_login' do
     erb :invalid_login
   end
 
-  get '/:id/links' do
-    @user = User.first(id: params[:id])
+
+
+
+  get '/links' do
     erb :links
   end
 
-  post '/:id/links' do
-    user = User.first(id: params[:id])
+
+
+
+
+  post '/new_link/:id' do
+
+    current_user
 
     if params[:URL].include?('http://') || params[:URL].include?('https://')
       @url = params[:URL]
@@ -41,13 +61,9 @@ class BookmarkApp < Sinatra::Base
       @url = 'http://' + params[:URL]
     end
 
-    if Link.all(url: @url).empty?
-      @link = Link.create(title: params[:Title], url: @url)
-      user.links << @link
-      user.save
-    else
-      @link = Link.first(url: @url)
-    end
+    current_user.links.each {|link| @link = link if link.url == @url}
+
+    @link ||= Link.create(title: params[:Title], url: @url)
 
     params[:Tags].downcase.split(', ').each do |tag|
       if Tag.all(name: tag).empty?
@@ -65,10 +81,16 @@ class BookmarkApp < Sinatra::Base
       end
     end
 
-    redirect to "/#{params[:id]}/links"
+    current_user.links << @link
+    current_user.save
+
+    redirect to "/links"
   end
 
+
+
   get '/tags/:name' do
+    current_user
     tag = Tag.first(name: params[:name])
     @links = tag ? tag.links : []
     erb :links
