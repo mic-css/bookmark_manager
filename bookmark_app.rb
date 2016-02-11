@@ -3,15 +3,37 @@ ENV['RACK_ENV'] ||= 'development'
 require 'sinatra/base'
 require './lib/link'
 require './lib/tag'
+require './lib/user'
 require './lib/dm_setup'
 
 class BookmarkApp < Sinatra::Base
   get '/' do
-    @links = Link.all
     erb :index
   end
 
-  post '/new' do
+  post '/users' do
+    # set user information here
+    @email = params[:email]
+    unless User.first(email: @email)
+      user = User.create(username: params[:username],
+                          email:    @email,
+                          password: params[:password])
+      redirect to "/#{user.id}/links"
+    end
+    redirect to '/invalid_login'
+  end
+
+  get '/invalid_login' do
+    erb :invalid_login
+  end
+
+  get '/:id/links' do
+    @user = User.first(id: params[:id])
+    erb :links
+  end
+
+  post '/:id/links' do
+    user = User.first(id: params[:id])
 
     if params[:URL].include?('http://') || params[:URL].include?('https://')
       @url = params[:URL]
@@ -21,6 +43,8 @@ class BookmarkApp < Sinatra::Base
 
     if Link.all(url: @url).empty?
       @link = Link.create(title: params[:Title], url: @url)
+      user.links << @link
+      user.save
     else
       @link = Link.first(url: @url)
     end
@@ -41,13 +65,13 @@ class BookmarkApp < Sinatra::Base
       end
     end
 
-    redirect to '/'
+    redirect to "/#{params[:id]}/links"
   end
 
   get '/tags/:name' do
     tag = Tag.first(name: params[:name])
     @links = tag ? tag.links : []
-    erb :index
+    erb :links
   end
 
 

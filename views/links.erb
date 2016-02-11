@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+  <head>
+    <title>Welcome to Bookmark Manager</title>
+  </head>
+
+  <body>
+
+    <h3>Welcome, <%=@user.username %>!</h3>
+
+    <form action="/<%=@user.id%>/links" method='post'>
+      <input type='text' name='Title' placeholder="Title" required>
+      <input type='text' name='URL' placeholder="URL" required>
+      <input type='text' name='Tags' placeholder="Tags (optional)">
+      <input type='submit' value='Add new bookmark'>
+    </form>
+
+    <% unless @user.links.empty?%>
+      <ul id="links">
+        <% @user.links.each do |link| %>
+          <li style="padding: 7px 0px; font-family: Arial;">
+            Title: <b><%= "#{link.title}"%></b><br>
+            URL: <a href="<%="#{link.url}"%>"><%="#{link.url}"%></a><br>
+            Tags: <em><%="#{link.tags.map{|t| t.name}.join(', ')}"%></em>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+
+  </body>
+
+</html>
