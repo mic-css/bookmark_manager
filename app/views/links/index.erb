@@ -1,0 +1,14 @@
+
+<h1>Links</h1>
+<a href="/links/new"><button>Add link</button></a>
+<form action="/links/:tag_name" method="post">
+  <input type="text" name="search_tag">
+  <input type="submit" value="Search By Tag"
+</form>
+<ul id="links">
+  <%@links.each do |link| %>
+    <li> Title: <%= link.title %></li>
+    <li> URL: <%= link.url %></li>
+    <li> Tags: <%= link.tags.map {|tag| tag.name }.join(", ") %>
+  <% end %>
+</ul>
